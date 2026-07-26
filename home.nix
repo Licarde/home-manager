@@ -7,14 +7,17 @@
   home.homeDirectory = "/home/riorio";
 
 # 触るな危険
-  home.stateVersion = "26.05"; # Please read the comment before changing.
+  home.stateVersion = "26.05";
 # 触るな危険
 
   # Nixpkgs
   home.packages = with pkgs; [
+    # Desktop Environment
     nautilus
     wl-clipboard
-    microsoft-edge
+    xwayland-saterite
+
+    google-chrome
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
@@ -32,7 +35,7 @@
   # Permitted proprietary softwares
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
-      "microsoft-edge"
+      "google-chrome"
     ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -74,7 +77,6 @@
   programs = {
     home-manager.enable = true;
     foot.enable = true;
-    nixvim.enable = true;
     waybar.enable = true;
   };
 
@@ -82,7 +84,6 @@
     # notification daemon
     dunst.enable = true;
     hyprlauncher.enable = true;
-    hyprpolkitagent.enable = true;
   };
 
   # 日本語Keylayout
