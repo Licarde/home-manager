@@ -126,6 +126,10 @@
         EnumerateBackwardKeys = "";
         EnnumerateSkipFirst = "False";
         ModifierOnlyKeyTimeout = "250";
+        # 左 Shift 単独で IME を切り替える動作を殺す。fcitx5 の既定値は
+        # AltTriggerKeys = Shift_L で、書かないとこれが効いてしまう。
+        # 空文字がキーリスト無効の表現（EnumerateForwardKeys と同じ）。
+        AltTriggerKeys = "";
       };
       "Hotkey/TriggerKeys" = {
         "0" = "Zenkaku_Hankaku";
