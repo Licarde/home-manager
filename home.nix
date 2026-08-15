@@ -20,6 +20,11 @@
 
     google-chrome
 
+    # メディアキー・輝度キー用（niri / mango の bind から呼ぶ）。
+    # wpctl は pipewire の wireplumber がシステム側で入れている。
+    brightnessctl
+    playerctl
+
     # CLI
     claude-code
     gh
