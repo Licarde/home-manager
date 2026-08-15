@@ -26,8 +26,20 @@ in
     # WAYLAND_DISPLAY が無い状態で起動して waylandim が繋がらない
     # （journal に "Failed to open wayland connection"）。
     # 環境変数を systemd/D-Bus に入れ直した後で起動し直す。
+    #
+    # noctalia も同じ理由で restart する。こちらは 2 回目以降のログインで
+    # 起動しなくなるのが主症状。systemd --user（loginctl の class=manager の
+    # セッション）はログアウトを跨いで生き残り、nixos-fake-graphical-session
+    # .target が graphical-session.target を掴んだままなので、target は最初の
+    # ログインから一度も落ちない。noctalia はコンポジタが終わると Wayland 接続
+    # が切れて status 0 で終了する（Restart=on-failure なので再起動しない）が、
+    # 次のログインでは target が既に active で Wants= が引き直されないため
+    # 死んだままになる。mango-session.target の start も同じ理由で no-op。
+    # desktop/default.nix には「コンポジタ側の自動起動には書かない」と
+    # あるが、start ではなく restart なので二重起動にはならない。
     autostart_sh = ''
       systemctl --user restart fcitx5-daemon.service
+      systemctl --user restart noctalia.service
     '';
 
     settings = {
