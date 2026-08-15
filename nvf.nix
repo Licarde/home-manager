@@ -1,20 +1,4 @@
-{ pkgs, ... }:
-
-let
-  # platformio.nvim は nixpkgs の vimPlugins に無いので自前で取る。
-  # Arduino_nyuumon の devShell が入れる pio コマンドを呼ぶ作りなので、
-  # 実際に使うときは同ディレクトリで nix develop / direnv を通すこと。
-  platformio-nvim = pkgs.vimUtils.buildVimPlugin {
-    pname = "nvim-platformio.lua";
-    version = "0-unstable-2026-05-08";
-    src = pkgs.fetchFromGitHub {
-      owner = "anurag3301";
-      repo = "nvim-platformio.lua";
-      rev = "e65fd65565da5c1d98c568bd0cdcad16627cdb14";
-      hash = "sha256-vIO+Un5BAzVU6JmHueSSRGujaTZcjfVBvh+sq/7CLgk=";
-    };
-  };
-in
+{ ... }:
 
 {
   programs.nvf = {
@@ -79,22 +63,14 @@ in
       autocomplete.nvim-cmp.enable = true;
       git.gitsigns.enable = true;
       treesitter.context.enable = true;
-
-      # platformio.nvim が依存するもの。telescope と treesitter は上で有効。
       binds.whichKey.enable = true;
       terminal.toggleterm.enable = true;
 
-      extraPlugins = {
-        telescope-ui-select = {
-          package = pkgs.vimPlugins.telescope-ui-select-nvim;
-          setup = "require('telescope').load_extension('ui-select')";
-        };
-        platformio = {
-          package = platformio-nvim;
-          setup = "require('platformio').setup({})";
-          after = [ "telescope-ui-select" ];
-        };
-      };
+      # TODO: platformio.nvim（anurag3301/nvim-platformio.lua）を入れたいが、
+      # nixpkgs の vimPlugins に無く、buildVimPlugin の require 検査が
+      # サンドボックス内で全モジュール失敗するため保留。
+      # pio コマンドと telescope / toggleterm / which-key を読み込み時に
+      # 要求するのが原因で、nvimSkipModules で検査を外せば通るはず。
     };
   };
 }
