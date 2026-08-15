@@ -121,10 +121,10 @@
     # .config/fcitx5/config を生成する
     fcitx5.settings.globalOptions = {
       Hotkey = {
-        EnumarateWithTriggerKeys = "True";
+        EnumerateWithTriggerKeys = "True";
         EnumerateForwardKeys = "";
         EnumerateBackwardKeys = "";
-        EnnumerateSkipFirst = "False";
+        EnumerateSkipFirst = "False";
         ModifierOnlyKeyTimeout = "250";
         # 左 Shift 単独で IME を切り替える動作を殺す。fcitx5 の既定値は
         # AltTriggerKeys = Shift_L で、書かないとこれが効いてしまう。
