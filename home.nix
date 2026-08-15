@@ -98,9 +98,6 @@
     };
   };
 
-  # polkit 認証エージェント。NixOS 側にこのオプションは無く home-manager 専用。
-  services.hyprpolkitagent.enable = true;
-
   # 日本語Keylayout
   i18n.inputMethod = {
     enable = true;

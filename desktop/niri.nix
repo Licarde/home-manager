@@ -1,42 +1,19 @@
-{ config, pkgs, lib, ... }:
+{ config, lib, ... }:
 
-# niri と mango の設定。コンポジタ本体の有効化は /etc/nixos 側
-# （programs.niri / programs.mango）で、ここに書くのはユーザー設定だけ。
+# niri の設定。コンポジタ本体の有効化は /etc/nixos の programs.niri。
 #
-# 欲しいのは 4 つ:
-#   ブラウザ      google-chrome
-#   ランチャー    noctalia のランチャーパネル
-#   ターミナル    foot
-#   ステータスバー noctalia のバー
-#
-# noctalia は systemd user service（graphical-session.target 紐付け）で
-# 起動するので、どちらのコンポジタでも同じものが上がる。コンポジタ側の
-# 自動起動には書かない（二重起動になるため）。
+# home-manager にも niri 本体にも programs.niri の HM モジュールが無いので、
+# 設定ファイル（KDL）を直接置く。`niri validate -c <file>` で検証できる。
 
 let
-  terminal = "foot";
-  browser = "google-chrome-stable";
-
-  # ランチャーは走っている noctalia に IPC でパネルを開かせる。
-  # 実行ファイル名は noctalia-shell ではなく noctalia。
-  launcher = "${lib.getExe config.programs.noctalia.package} msg panel-toggle launcher";
+  cfg = config.desktop;
+  noctalia = lib.getExe config.programs.noctalia.package;
 in
 
 {
-  # ステータスバー・ランチャー・通知をまとめて担当する。
-  programs.noctalia = {
-    enable = true;
-    systemd.enable = true;
-  };
-
-  #
-  # niri
-  #
-  # home-manager にも niri 本体にも programs.niri の HM モジュールが無いので、
-  # 設定ファイル（KDL）を直接置く。niri validate で検証できる。
   xdg.configFile."niri/config.kdl".text = ''
     // このファイルは home-manager が生成している。直接編集しても
-    // 次の switch で上書きされるので desktop.nix を編集すること。
+    // 次の switch で上書きされるので desktop/niri.nix を編集すること。
 
     input {
         keyboard {
@@ -56,9 +33,10 @@ in
         Mod+Shift+Slash { show-hotkey-overlay; }
 
         // 起動系
-        Mod+Return { spawn "${terminal}"; }
-        Mod+D { spawn "${lib.getExe config.programs.noctalia.package}" "msg" "panel-toggle" "launcher"; }
-        Mod+B { spawn "${browser}"; }
+        Mod+Return { spawn "${cfg.terminal}"; }
+        Mod+D { spawn "${noctalia}" "msg" "panel-toggle" "launcher"; }
+        Mod+B { spawn "${cfg.browser}"; }
+        Mod+E { spawn "${cfg.fileManager}"; }
 
         // 音量・マイク
         XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
@@ -162,58 +140,4 @@ in
 
     screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
   '';
-
-  #
-  # mango
-  #
-  # bind の書式は "修飾キー,キー,アクション[,引数]"。
-  wayland.windowManager.mango = {
-    enable = true;
-    systemd.enable = true;
-
-    settings = {
-      bind = [
-        "SUPER,Return,spawn,${terminal}"
-        "SUPER,d,spawn,${launcher}"
-        "SUPER,b,spawn,${browser}"
-
-        "SUPER,q,killclient,"
-        "SUPER,r,reload_config"
-
-        # 音量・メディア・輝度。niri 側と揃えてある。
-        "NONE,XF86AudioRaiseVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"
-        "NONE,XF86AudioLowerVolume,spawn,wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"
-        "NONE,XF86AudioMute,spawn,wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-        "NONE,XF86AudioMicMute,spawn,wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
-        "NONE,XF86AudioPlay,spawn,playerctl play-pause"
-        "NONE,XF86AudioPrev,spawn,playerctl previous"
-        "NONE,XF86AudioNext,spawn,playerctl next"
-        "NONE,XF86MonBrightnessUp,spawn,brightnessctl --class=backlight set +10%"
-        "NONE,XF86MonBrightnessDown,spawn,brightnessctl --class=backlight set 10%-"
-
-        # 一覧表示（mango は overview を持つ）
-        "SUPER,o,toggleoverview,"
-
-        # ウィンドウ移動
-        "SUPER,Left,focusdir,left"
-        "SUPER,Right,focusdir,right"
-        "SUPER,Up,focusdir,up"
-        "SUPER,Down,focusdir,down"
-
-        "SUPER,f,togglefullscreen,"
-
-        # タグ（mango は dwl 系なのでワークスペースではなくタグ）。
-        # view / tag は引数が 2 つで、2 番目はモニタ番号。
-        "SUPER,1,view,1,0"
-        "SUPER,2,view,2,0"
-        "SUPER,3,view,3,0"
-        "SUPER,4,view,4,0"
-
-        "SUPER+SHIFT,1,tag,1,0"
-        "SUPER+SHIFT,2,tag,2,0"
-        "SUPER+SHIFT,3,tag,3,0"
-        "SUPER+SHIFT,4,tag,4,0"
-      ];
-    };
-  };
 }

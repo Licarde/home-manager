@@ -43,7 +43,7 @@
           mangowm.hmModules.mango
           ./home.nix
           ./nvf.nix
-          ./desktop.nix
+          ./desktop
         ];
       };
     };
