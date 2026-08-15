@@ -20,6 +20,14 @@ in
     package = null;
     portalPackage = null;
 
+    # stateVersion 26.05 の既定は "lua" だが、それは settings を Lua の
+    # API 形（hl.bind("SUPER + Return", hl.dsp.exec_cmd("foot")) など）で
+    # 書く前提の生成器で、下のような hyprlang 書式を渡すと
+    # `hl.$mod("SUPER")` のような構文エラーの Lua を吐く。
+    # Hyprland 0.56 は hyprlang と Lua の両方にリンクしているので
+    # hyprlang 側を明示する。
+    configType = "hyprlang";
+
     settings = {
       "$mod" = "SUPER";
 
