@@ -12,9 +12,19 @@
       lineNumberMode = "relNumber";
 
       options = {
+        # インデントはスペース 2。ハードTABは入力しない方針なので
+        # expandtab で Tab キーもスペースに展開する。softtabstop を
+        # 揃えておかないと Backspace が 1 文字ずつしか消さない。
         tabstop = 2;
+        softtabstop = 2;
         shiftwidth = 2;
         expandtab = true;
+        shiftround = true;
+
+        # 紛れ込んだハードTABを見えるようにする
+        list = true;
+        listchars = "tab:» ,trail:·,nbsp:␣";
+
         ignorecase = true;
         smartcase = true;
       };
