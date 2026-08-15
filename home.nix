@@ -1,4 +1,8 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
+
+let
+  noctalia = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
+in
 
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -15,9 +19,13 @@
     # Desktop Environment
     nautilus
     wl-clipboard
-    xwayland-saterite
+    noctalia # waybar + dunst + hyprlauncher の置き換え
 
     google-chrome
+
+    # CLI
+    claude-code
+    gh
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
@@ -36,6 +44,7 @@
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
       "google-chrome"
+      "claude-code"
     ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -77,13 +86,30 @@
   programs = {
     home-manager.enable = true;
     foot.enable = true;
-    waybar.enable = true;
+
+    # direnv。nix-direnv が use flake のキャッシュを持つ。
+    # bash 側のフック注入には programs.bash.enable が必要。
+    bash.enable = true;
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
   };
 
-  services = {
-    # notification daemon
-    dunst.enable = true;
-    hyprlauncher.enable = true;
+  # noctalia-shell がバー・通知・ランチャを兼ねるので、waybar / dunst /
+  # hyprlauncher は外した。graphical-session.target に紐付けて自動起動する。
+  systemd.user.services.noctalia-shell = {
+    Unit = {
+      Description = "Noctalia shell";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${noctalia}/bin/noctalia-shell";
+      Restart = "on-failure";
+      RestartSec = 3;
+    };
+    Install.WantedBy = [ "graphical-session.target" ];
   };
 
   # 日本語Keylayout
