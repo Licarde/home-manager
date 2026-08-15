@@ -1,8 +1,4 @@
-{ config, pkgs, lib, inputs, ... }:
-
-let
-  noctalia = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
-in
+{ config, pkgs, lib, ... }:
 
 {
   # Home Manager needs a bit of information about you and the paths it should
@@ -20,7 +16,7 @@ in
     nautilus
     wl-clipboard
     libnotify # notify-send
-    noctalia # waybar + dunst + hyprlauncher の置き換え
+    # noctalia は desktop.nix の programs.noctalia が入れる
 
     google-chrome
 
@@ -99,22 +95,6 @@ in
 
   # polkit 認証エージェント。NixOS 側にこのオプションは無く home-manager 専用。
   services.hyprpolkitagent.enable = true;
-
-  # noctalia-shell がバー・通知・ランチャを兼ねるので、waybar / dunst /
-  # hyprlauncher は外した。graphical-session.target に紐付けて自動起動する。
-  systemd.user.services.noctalia-shell = {
-    Unit = {
-      Description = "Noctalia shell";
-      PartOf = [ "graphical-session.target" ];
-      After = [ "graphical-session.target" ];
-    };
-    Service = {
-      ExecStart = "${noctalia}/bin/noctalia-shell";
-      Restart = "on-failure";
-      RestartSec = 3;
-    };
-    Install.WantedBy = [ "graphical-session.target" ];
-  };
 
   # 日本語Keylayout
   i18n.inputMethod = {

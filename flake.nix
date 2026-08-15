@@ -12,14 +12,20 @@
       url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # noctalia は意図的に nixpkgs を follows させていない。独自 pin の
-    # quickshell しか上流キャッシュにバイナリが無く、follows させると
-    # Qt と quickshell をローカルでビルドすることになる。
+    # noctalia は意図的に nixpkgs を follows させていない。noctalia.cachix.org
+    # にあるバイナリは上流が pin した nixpkgs でビルドされたもので、follows
+    # させると入力が変わってキャッシュに当たらなくなる。
     noctalia.url = "github:noctalia-dev/noctalia-shell";
+    # mango は /etc/nixos 側でコンポジタ本体を有効にしているが、設定を書く
+    # home-manager モジュールはこちらの input から取る。
+    mangowm = {
+      url = "github:mangowm/mango";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    inputs@{ nixpkgs, home-manager, nvf, ... }:
+    inputs@{ nixpkgs, home-manager, nvf, noctalia, mangowm, ... }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
@@ -33,8 +39,11 @@
 
         modules = [
           nvf.homeManagerModules.default
+          noctalia.homeModules.default
+          mangowm.hmModules.mango
           ./home.nix
           ./nvf.nix
+          ./desktop.nix
         ];
       };
     };
