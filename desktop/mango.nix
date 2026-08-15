@@ -36,6 +36,18 @@ in
       # 使いたければ 1.6（=1600x1000）や 1.75 のような小数も指定できる。
       monitorrule = [ "name:eDP-1,scale:2.0" ];
 
+      # トラックパッドのスクロール。2 本指スクロール自体は mango の既定
+      # （scroll_method = 1 = 2 本指）で既に有効なので、ここで変えているのは
+      # 向きと速さだけ。natural_scrolling の既定は 0（＝逆向き）なので
+      # macOS と揃えて 1 にする。速さは scroll_factor（0.1〜10.0）で調整する。
+      #
+      # 注意: これらの libinput 設定はデバイス生成時にしか適用されない。
+      # SUPER,r の reload_config では反映されないので、確認するには
+      # mango を起動し直す（ログインし直す）必要がある。
+      scroll_method = 1;
+      trackpad_natural_scrolling = 1;
+      trackpad_scroll_factor = 1.0;
+
       # トラックパッドのジェスチャ。書式は
       # "修飾キー,方向,指の本数,アクション[,引数]"。
       # 方向は「指を動かす向き」なので、macOS と同じく左に払うと右のタグへ
