@@ -134,11 +134,16 @@
       "Hotkey/TriggerKeys" = {
         "0" = "Zenkaku_Hankaku";
       };
+      # かな（KEY_HANGEUL）1 つで IME の ON/OFF をトグルする。fcitx5 は
+      # ActivateKeys を先に、DeactivateKeys を後に判定し、それぞれ
+      # 「今 OFF なら」「今 ON なら」でしか発火しないので、同じキーを両方に
+      # 書くとトグルになる（instance.cpp の canActivate / canDeactivate）。
+      # 英数 は keyd 側で無変換に付け替えたのでここには出てこない。
       "Hotkey/ActivateKeys" = {
         "0" = "Hangul";
       };
       "Hotkey/DeactivateKeys" = {
-        "0" = "Hangul_Romaja";
+        "0" = "Hangul";
       };
       "Hotkey/PrevPage" = {
         "0" = "Up";
