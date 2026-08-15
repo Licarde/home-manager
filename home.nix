@@ -14,9 +14,9 @@ in
   home.stateVersion = "26.05";
 # 触るな危険
 
-  # Nixpkgs
+  # パッケージ
   home.packages = with pkgs; [
-    # Desktop Environment
+    # デスクトップ環境
     nautilus
     wl-clipboard
     libnotify # notify-send
@@ -41,7 +41,7 @@ in
     # '')
   ];
 
-  # Permitted proprietary softwares
+  # 許可するプロプライエタリソフトウェア
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [
       "google-chrome"
@@ -123,12 +123,12 @@ in
     fcitx5.addons = with pkgs; [
       fcitx5-mozc
     ];
-    # Generate .config/fcitx5/profile
+    # .config/fcitx5/profile を生成する
     fcitx5.settings.inputMethod = {
       "Groups/0" = {
         Name = "Default";
-	"Default Layout" = "us";
-	DefaultIM = "mozc";
+        "Default Layout" = "us";
+        DefaultIM = "mozc";
       };
       "Groups/0/Items/0".Name = "keyboard-us";
       "Groups/0/Items/0".Layout = "";
@@ -136,14 +136,14 @@ in
       "Groups/0/Items/1".Layout = "";
       "GroupOrder"."0" = "Default";
     };
-    # Generate .config/fcitx5/config
+    # .config/fcitx5/config を生成する
     fcitx5.settings.globalOptions = {
       Hotkey = {
         EnumarateWithTriggerKeys = "True";
-	EnumerateForwardKeys = "";
-	EnumerateBackwardKeys = "";
-	EnnumerateSkipFirst = "False";
-	ModifierOnlyKeyTimeout = "250";
+        EnumerateForwardKeys = "";
+        EnumerateBackwardKeys = "";
+        EnnumerateSkipFirst = "False";
+        ModifierOnlyKeyTimeout = "250";
       };
       "Hotkey/TriggerKeys" = {
         "0" = "Zenkaku_Hankaku";
@@ -168,22 +168,22 @@ in
       };
       Behavior = {
         ActiveByDefault = "False";
-	resetStateWhenFocusIn = "No";
-	ShareInputState = "No";
-	PreeditEnabledByDefault = "True";
-	ShowInputMethodInformation = "True";
-	showInputMethodInformationWhenFocusIn = "False";
-	CompactInputMethodInformation = "True";
-	ShowFirstInputMethodInformation = "True";
-	DefaultPageSize = "5";
-	OverrideXkbOption = "False";
-	CustomXkbOption = "";
-	EnabledAddons = "";
-	DisabledAddons = "";
-	PreloadInputMethod = "True";
-	AllowInputMethodForPassword = "True";
-	ShowPreeditForPassword = "False";
-	AutoSavePeriod = "30";
+        resetStateWhenFocusIn = "No";
+        ShareInputState = "No";
+        PreeditEnabledByDefault = "True";
+        ShowInputMethodInformation = "True";
+        showInputMethodInformationWhenFocusIn = "False";
+        CompactInputMethodInformation = "True";
+        ShowFirstInputMethodInformation = "True";
+        DefaultPageSize = "5";
+        OverrideXkbOption = "False";
+        CustomXkbOption = "";
+        EnabledAddons = "";
+        DisabledAddons = "";
+        PreloadInputMethod = "True";
+        AllowInputMethodForPassword = "True";
+        ShowPreeditForPassword = "False";
+        AutoSavePeriod = "30";
       };
     };
     fcitx5.ignoreUserConfig = true;

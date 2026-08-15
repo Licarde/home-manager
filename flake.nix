@@ -12,9 +12,9 @@
       url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Deliberately does NOT follow nixpkgs: noctalia pins its own quickshell and
-    # only that pin has binaries in the upstream cache. Following would rebuild
-    # Qt/quickshell locally.
+    # noctalia は意図的に nixpkgs を follows させていない。独自 pin の
+    # quickshell しか上流キャッシュにバイナリが無く、follows させると
+    # Qt と quickshell をローカルでビルドすることになる。
     noctalia.url = "github:noctalia-dev/noctalia-shell";
   };
 
@@ -28,7 +28,7 @@
       homeConfigurations."riorio" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
-        # Lets home.nix reach flake inputs (noctalia) directly.
+        # home.nix から flake input（noctalia）を直接参照できるようにする。
         extraSpecialArgs = { inherit inputs; };
 
         modules = [
