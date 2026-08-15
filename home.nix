@@ -19,6 +19,7 @@ in
     # Desktop Environment
     nautilus
     wl-clipboard
+    libnotify # notify-send
     noctalia # waybar + dunst + hyprlauncher の置き換え
 
     google-chrome
@@ -95,6 +96,9 @@ in
       nix-direnv.enable = true;
     };
   };
+
+  # polkit 認証エージェント。NixOS 側にこのオプションは無く home-manager 専用。
+  services.hyprpolkitagent.enable = true;
 
   # noctalia-shell がバー・通知・ランチャを兼ねるので、waybar / dunst /
   # hyprlauncher は外した。graphical-session.target に紐付けて自動起動する。
