@@ -134,11 +134,18 @@
       "Hotkey/TriggerKeys" = {
         "0" = "Zenkaku_Hankaku";
       };
+      # かな = IME ON、英数 = IME OFF の押し分け。トグルにはしない。
+      #
+      # 物理キーは Apple JIS の かな / 英数 のままだが、configuration.nix の
+      # keyd で KEY_KATAKANAHIRAGANA / KEY_MUHENKAN に付け替えてある。
+      # 素の KEY_HANGEUL / KEY_HANJA（keysym は Hangul / Hangul_Hanja）は
+      # fcitx5 が韓国語 IME 用として自前で握っていて、ActivateKeys に
+      # 書いてもトグルになってしまうため。詳細は keyd 側のコメント。
       "Hotkey/ActivateKeys" = {
-        "0" = "Hangul";
+        "0" = "Hiragana_Katakana";
       };
       "Hotkey/DeactivateKeys" = {
-        "0" = "Hangul_Romaja";
+        "0" = "Muhenkan";
       };
       "Hotkey/PrevPage" = {
         "0" = "Up";
