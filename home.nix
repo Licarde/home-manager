@@ -121,7 +121,10 @@
     # .config/fcitx5/config を生成する
     fcitx5.settings.globalOptions = {
       Hotkey = {
-        EnumerateWithTriggerKeys = "True";
+        # トリガキーを無効にしたので巡回もさせない。True のままだと、
+        # グループに keyboard-us と mozc の 2 つが入っている状態で
+        # トリガキーが IM 巡回として働き、トグルに見える経路が残る。
+        EnumerateWithTriggerKeys = "False";
         EnumerateForwardKeys = "";
         EnumerateBackwardKeys = "";
         EnumerateSkipFirst = "False";
@@ -131,21 +134,26 @@
         # 空文字がキーリスト無効の表現（EnumerateForwardKeys と同じ）。
         AltTriggerKeys = "";
       };
+      # 半角/全角キーによるトグルは無効にする。押し分け（かな=ON、英数=OFF）が
+      # あればトグルの入口は要らず、残しておくと IME の状態がずれる経路になる。
+      # 空文字がキーリスト無効の表現（EnumerateForwardKeys と同じ）。
       "Hotkey/TriggerKeys" = {
-        "0" = "Zenkaku_Hankaku";
+        "0" = "";
       };
       # かな = IME ON、英数 = IME OFF の押し分け。トグルにはしない。
       #
-      # 物理キーは Apple JIS の かな / 英数 のままだが、configuration.nix の
-      # keyd で KEY_KATAKANAHIRAGANA / KEY_MUHENKAN に付け替えてある。
-      # 素の KEY_HANGEUL / KEY_HANJA（keysym は Hangul / Hangul_Hanja）は
-      # fcitx5 が韓国語 IME 用として自前で握っていて、ActivateKeys に
-      # 書いてもトグルになってしまうため。詳細は keyd 側のコメント。
+      # Apple JIS の かな / 英数 は HID の LANG1 / LANG2 で、Linux では
+      # KEY_HANGEUL / KEY_HANJA として飛び、XKB の us 配列（symbols/pc）が
+      # Hangul / Hangul_Hanja を割り当てる。keyd では付け替えない。
+      #
+      # 以前 DeactivateKeys が Hangul_Romaja になっていたが、この keysym は
+      # どの XKB レイアウトも生成しないので英数キーは未接続だった。
+      # 英数キーが実際に出すのは Hangul_Hanja。
       "Hotkey/ActivateKeys" = {
-        "0" = "Hiragana_Katakana";
+        "0" = "Hangul";
       };
       "Hotkey/DeactivateKeys" = {
-        "0" = "Muhenkan";
+        "0" = "Hangul_Hanja";
       };
       "Hotkey/PrevPage" = {
         "0" = "Up";
