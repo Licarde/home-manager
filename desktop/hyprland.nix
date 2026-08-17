@@ -139,7 +139,20 @@ in
           kb_layout = "us";
           touchpad = {
             natural_scroll = true;
-            tap-to-click = true;
+
+            # lua モードでのキー名は hyprlang のものと綴りが違う。
+            # Hyprland は m_configValues を引くときに ':' を '.' に、
+            # '-' を '_' に置き換えるので（src/config/lua/ConfigManager.cpp）、
+            # hyprlang の input:touchpad:tap-to-click は lua では
+            # input.touchpad.tap_to_click になる。ハイフンのまま書くと
+            # 「unknown config key」でこの 1 行だけが黙って捨てられる。
+            tap_to_click = true;
+
+            # 3 本指ドラッグ（macOS 風にウィンドウやテキストを掴む）。
+            # libinput 1.28 の LIBINPUT_CONFIG_3FG_DRAG をそのまま渡す値で、
+            # 0 = 無効 / 1 = 3 本指 / 2 = 4 本指。3 本指を掴む方に使うので、
+            # スワイプのジェスチャは 4 本指側に寄せてある（下の gesture）。
+            drag_3fg = 1;
           };
         };
 
@@ -149,6 +162,23 @@ in
           disable_splash_rendering = true;
         };
       };
+
+      # トラックパッドのジェスチャ。0.51 で gestures:workspace_swipe が廃止され、
+      # gesture（lua では hl.gesture）に本数・方向・動作を 1 件ずつ登録する形に
+      # なった。既定のジェスチャは 1 件も登録されないので、書かなければ何本指で
+      # 払っても無反応になる。
+      #
+      # 3 本指は上の drag_3fg がドラッグに使うため、スワイプは 4 本指に寄せる。
+      # direction = "horizontal" で左右をまとめて 1 件にできる。向きは
+      # gestures:workspace_swipe_invert（既定 true）が決めていて、既定のままで
+      # natural_scroll と揃う（左に払うと右のワークスペースへ）。
+      gesture = [
+        {
+          fingers = 4;
+          direction = "horizontal";
+          action = "workspace";
+        }
+      ];
 
       bind =
         # 起動系
