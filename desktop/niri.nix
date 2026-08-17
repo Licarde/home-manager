@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 # niri の設定。コンポジタ本体の有効化は /etc/nixos の programs.niri。
 #
@@ -28,6 +33,20 @@ in
     }
 
     prefer-no-csd
+
+    // XWayland。niri 自身が xwayland-satellite を起動し、DISPLAY の設定と
+    // 終了時の後始末まで面倒を見る。spawn-at-startup で自前に起動する必要は
+    // ない（その場合 DISPLAY は自分で設定することになる）。
+    // ここで store パスを直書きしているので、home.packages に足す必要もない。
+    xwayland-satellite {
+        path "${lib.getExe pkgs.xwayland-satellite}"
+    }
+
+    // アプリは作業領域いっぱいの幅で開く。noctalia のバーとギャップは残り、
+    // タイル配置のままなので、通常幅に戻したいときは Mod+R で切り替える。
+    window-rule {
+        open-maximized true
+    }
 
     binds {
         Mod+Shift+Slash { show-hotkey-overlay; }
