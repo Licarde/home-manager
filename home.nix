@@ -28,6 +28,10 @@
     # CLI
     claude-code
     gh
+
+    # 複数のコーディングエージェントを 1 つの端末で束ねる TUI（https://herdr.dev）。
+    # claude-code のセッションを並べて回すために入れる。
+    herdr
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
