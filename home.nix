@@ -189,6 +189,24 @@
         AutoSavePeriod = "30";
       };
     };
-    fcitx5.ignoreUserConfig = true;
+    # ignoreUserConfig は有効にしない。
+    #
+    # このオプションは SKIP_FCITX_USER_PATH=1 を立てるだけで、その効果は
+    # 「fcitx5 が ~/.config/fcitx5 を一切読まなくなる」こと。ところが
+    # 上の settings.globalOptions / settings.inputMethod は home-manager が
+    # xdg.configFile 経由で **まさにその ~/.config/fcitx5 に** 書き出す。
+    # つまり true にすると、ここに書いた設定が丸ごと無視され、fcitx5 は
+    # 素の既定値で動く。2026-08-17 にこれを踏んだ。
+    #
+    # 既定値は韓国語 IME 向けで、TriggerKeys に Hangul が、ActivateKeys に
+    # Hangul_Hanja が入っている。Apple JIS の かな = Hangul、英数 =
+    # Hangul_Hanja なので、かな＝IME 巡回のトグル、英数＝IME ON という
+    # ちぐはぐな挙動になっていた。
+    #
+    # false でも宣言性は失われない。~/.config/fcitx5 は home-manager が
+    # 張る読み取り専用の store シンボリックリンクなので、GUI 設定ツールから
+    # 書き換えることはできない。加えて mozc のユーザー辞書が保存できる
+    # ようになる（true だと保存も読み込みもできない）。
+    fcitx5.ignoreUserConfig = false;
   };
 }
