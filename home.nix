@@ -112,18 +112,20 @@
         "Default Layout" = "us";
         DefaultIM = "mozc";
       };
-      "Groups/0/Items/0".Name = "keyboard-us";
+      # グループには mozc だけを入れる。keyboard-us も並べていると
+      # 「IM の巡回」と「IME の ON/OFF」が同じ操作に見えてしまい、
+      # かなキーがトグルとして働く経路が残るため。IME OFF のときの配列は
+      # 上の "Default Layout" = "us" が受け持つので、keyboard-us を
+      # 項目として持つ必要はない。
+      "Groups/0/Items/0".Name = "mozc";
       "Groups/0/Items/0".Layout = "";
-      "Groups/0/Items/1".Name = "mozc";
-      "Groups/0/Items/1".Layout = "";
       "GroupOrder"."0" = "Default";
     };
     # .config/fcitx5/config を生成する
     fcitx5.settings.globalOptions = {
       Hotkey = {
-        # トリガキーを無効にしたので巡回もさせない。True のままだと、
-        # グループに keyboard-us と mozc の 2 つが入っている状態で
-        # トリガキーが IM 巡回として働き、トグルに見える経路が残る。
+        # トリガキーを無効にしたので巡回もさせない。グループを mozc 単独に
+        # したので巡回する相手もいないが、明示的に落としておく。
         EnumerateWithTriggerKeys = "False";
         EnumerateForwardKeys = "";
         EnumerateBackwardKeys = "";
