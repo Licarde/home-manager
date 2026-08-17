@@ -153,6 +153,21 @@ in
             # 0 = 無効 / 1 = 3 本指 / 2 = 4 本指。3 本指を掴む方に使うので、
             # スワイプのジェスチャは 4 本指側に寄せてある（下の gesture）。
             drag_3fg = 1;
+
+            # タイピング中は無効にする。Hyprland の既定も true なので値は
+            # 変わらないが、3 つのコンポジタで同じことを同じ場所に書いておく。
+            # 実際に働くには /etc/nixos の hardware/touchpad.nix が要る。
+            disable_while_typing = true;
+
+            # 指の本数でボタンを決める（1=左 / 2=右 / 3=中）。既定は false で、
+            # その場合 Hyprland は button-areas を渡す。libinput 自身は Apple の
+            # タッチパッドなら clickfinger を既定にするので、これは既定値を
+            # 上書きして本来の挙動に戻していることになる。
+            #
+            # 3 本指の押し込み（＝中クリック）と上の drag_3fg は、libinput 側では
+            # 「押し込み」と「3 本指を置いて動かす」で別経路なので両立するはず。
+            # 実機で干渉するようなら drag_3fg を 2（4 本指）に寄せる。
+            clickfinger_behavior = true;
           };
         };
 

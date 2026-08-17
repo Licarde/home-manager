@@ -29,6 +29,18 @@ in
         touchpad {
             tap
             natural-scroll
+
+            // タイピング中は無効にする。libinput の既定も有効だが、
+            // この機能が実際に働くには /etc/nixos の hardware/touchpad.nix が
+            // 要る（T2 のトラックパッドは外付け扱いにされていて、そのままだと
+            // 設定項目自体が libinput 側に作られない）。
+            dwt
+
+            // 指の本数でボタンを決める（1=左 / 2=右 / 3=中）。
+            // libinput は Apple のタッチパッドなら既定で clickfinger にするが、
+            // hyprland と mango は明示的に button-areas を渡してしまうので、
+            // 3 つのコンポジタで挙動を揃えるためここでも明示する。
+            click-method "clickfinger"
         }
     }
 
