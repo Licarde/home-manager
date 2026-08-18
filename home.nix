@@ -68,7 +68,7 @@
     # '';
   };
 
-  # herdr の設定。変えるのは prefix だけで、キーバインドは既定のまま試す。
+  # herdr の設定。変えるのは prefix と detach だけで、残りは既定のまま試す。
   # tmux との差分の全体像は ~/memo/knowledges/herdr.md を参照。
   # ~/.config/herdr/ には socket・ログ・session.json といった実行時状態も
   # 同居するので、ディレクトリごとではなく config.toml だけを張る。
@@ -81,15 +81,22 @@
     [keys]
     # tmux と herdr は既定の prefix がどちらも ctrl+b で、入れ子にすると
     # 食い合う。herdr 側を ctrl+q にずらして ctrl+b を tmux に譲る。
-    # 注意 1: detach の既定が prefix+q なので「ctrl+q → q」でデタッチになる。
-    # 注意 2: ctrl+q は端末のフロー制御（XON）のキー。herdr の中で動かす
-    #         他の TUI に ctrl+q を渡したい場合は prefix に食われる。
+    # 注意: ctrl+q は端末のフロー制御（XON）のキー。herdr の中で動かす
+    #       他の TUI に ctrl+q を渡したい場合は prefix に食われる。
     prefix = "ctrl+q"
 
+    # デタッチの既定は prefix+q。prefix が ctrl+q なので「ctrl+q → q」という
+    # 押しやすい並びになってしまい、誤爆が怖い。tmux と同じ prefix+d へ移す。
+    # 空いた prefix+q は割り当てない（herdr にペイン番号の表示は無い）。
+    detach = "prefix+d"
+
     # 他のキーバインドは herdr の既定のまま。tmux と食い違う主なものは
-    # detach = prefix+q（tmux は prefix+d）、settings = prefix+s、
-    # rename_tab = prefix+shift+t、close_tab = prefix+shift+x、
-    # 分割 = prefix+v / prefix+minus、フォーカス移動 = prefix+h/j/k/l。
+    # settings = prefix+s、rename_tab = prefix+shift+t、
+    # close_tab = prefix+shift+x、分割 = prefix+v / prefix+minus、
+    # フォーカス移動 = prefix+h/j/k/l。
+
+    # 注意: workspace を閉じる close_workspace が prefix+shift+d で、
+    #       detach の隣。シフトが滑ると workspace ごと閉じる。
   '';
 
   # Home Manager can also manage your environment variables through
