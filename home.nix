@@ -81,7 +81,13 @@
       onboarding = false
 
       [keys]
-      prefix = "ctrl+b"
+      # prefix は ctrl+b ではなく ctrl+q。tmux と herdr の既定が同じ ctrl+b だと
+      # 入れ子にしたときに食い合うので、herdr 側をずらして ctrl+b を tmux に譲る。
+      # detach は下で prefix+d に移してあるので、既定の prefix+q との
+      # 「ctrl+q → q」の押し間違えは起きない。
+      # 注意: ctrl+q は端末のフロー制御（XON）のキー。herdr の中で動かす他の TUI に
+      # ctrl+q を渡したい場合は prefix に食われる。
+      prefix = "ctrl+q"
 
       # --- tmux に合わせて変更したもの ---
 
