@@ -68,69 +68,28 @@
     # '';
   };
 
-  # herdr のキーバインドを tmux 風に寄せる。
+  # herdr の設定。変えるのは prefix だけで、キーバインドは既定のまま試す。
+  # tmux との差分の全体像は ~/memo/knowledges/herdr.md を参照。
   # ~/.config/herdr/ には socket・ログ・session.json といった実行時状態も
   # 同居するので、ディレクトリごとではなく config.toml だけを張る。
   xdg.configFile."herdr/config.toml".text = ''
-      # herdr のキーバインドを tmux の既定に寄せる。
-      # 差分の全体像は ~/memo/knowledges/herdr.md を参照。
+    # herdr 自身が初回起動時に書き込む値。ここが store の読み取り専用
+    # シンボリックリンクになるので、あらかじめ書いておかないと
+    # オンボーディング画面が毎回出る。
+    onboarding = false
 
-      # herdr 自身が初回起動時に書き込む値。ここが store の読み取り専用
-      # シンボリックリンクになるので、あらかじめ書いておかないと
-      # オンボーディング画面が毎回出る。
-      onboarding = false
+    [keys]
+    # tmux と herdr は既定の prefix がどちらも ctrl+b で、入れ子にすると
+    # 食い合う。herdr 側を ctrl+q にずらして ctrl+b を tmux に譲る。
+    # 注意 1: detach の既定が prefix+q なので「ctrl+q → q」でデタッチになる。
+    # 注意 2: ctrl+q は端末のフロー制御（XON）のキー。herdr の中で動かす
+    #         他の TUI に ctrl+q を渡したい場合は prefix に食われる。
+    prefix = "ctrl+q"
 
-      [keys]
-      # prefix は ctrl+b ではなく ctrl+q。tmux と herdr の既定が同じ ctrl+b だと
-      # 入れ子にしたときに食い合うので、herdr 側をずらして ctrl+b を tmux に譲る。
-      # detach は下で prefix+d に移してあるので、既定の prefix+q との
-      # 「ctrl+q → q」の押し間違えは起きない。
-      # 注意: ctrl+q は端末のフロー制御（XON）のキー。herdr の中で動かす他の TUI に
-      # ctrl+q を渡したい場合は prefix に食われる。
-      prefix = "ctrl+q"
-
-      # --- tmux に合わせて変更したもの ---
-
-      # 最重要。herdr の既定では prefix+q がデタッチで、tmux の癖で
-      # 「ペイン番号を表示」のつもりに押すとセッションから抜けてしまう。
-      detach = "prefix+d"
-
-      # workspace 機能は使わないので、workspace_picker（tmux の choose-session
-      # 相当）と goto（横断ジャンプ）はどちらも割り当てない。空文字が「無効」。
-      # workspace が 1 つしかないなら選ぶものがない。
-      workspace_picker = ""
-      goto = ""
-      # 上を空けたので settings は herdr 既定の prefix+s のまま。退避は不要。
-
-      # tmux の prefix , （rename-window）。
-      rename_tab = "prefix+comma"
-
-      # tmux の prefix o （次のペイン）。既定の prefix+tab も
-      # cycle_pane_previous 側の prefix+shift+tab が残るので巡回はできる。
-      cycle_pane_next = "prefix+o"
-      # prefix+o を明け渡すため、通知先を開く操作をシフト付きへ退避。
-      open_notification_target = "prefix+shift+o"
-
-      # tmux の prefix ; （直前のペイン）。herdr の既定は未割り当て。
-      last_pane = "prefix+semicolon"
-
-      # --- 既定のままで tmux と一致しているもの（確認用に明示） ---
-      # new_tab      = "prefix+c"
-      # next_tab     = "prefix+n"
-      # previous_tab = "prefix+p"
-      # switch_tab   = "prefix+1..9"   # tmux と違い 0 は無い
-      # close_pane   = "prefix+x"
-      # zoom         = "prefix+z"
-      # コピーモードの prefix+[ は設定不可（固定）。貼り付けの prefix+] は herdr に無い。
-
-      # --- 揃えられなかったもの ---
-      # prefix+&（close_tab）と prefix+%／prefix+"（分割）は
-      # シフト付き記号で、herdr 自身が「端末依存」と警告しているため既定のまま。
-      #   close_tab        = "prefix+shift+x"
-      #   split_vertical   = "prefix+v"      （右に分割）
-      #   split_horizontal = "prefix+minus"  （下に分割）
-      # tmux の prefix+l（直前の window）に相当する操作は herdr に無い。
-      # prefix+h/j/k/l はペインのフォーカス移動として既定のまま使う。
+    # 他のキーバインドは herdr の既定のまま。tmux と食い違う主なものは
+    # detach = prefix+q（tmux は prefix+d）、settings = prefix+s、
+    # rename_tab = prefix+shift+t、close_tab = prefix+shift+x、
+    # 分割 = prefix+v / prefix+minus、フォーカス移動 = prefix+h/j/k/l。
   '';
 
   # Home Manager can also manage your environment variables through
