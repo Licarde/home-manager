@@ -95,15 +95,12 @@
       # 「ペイン番号を表示」のつもりに押すとセッションから抜けてしまう。
       detach = "prefix+d"
 
-      # herdr の workspace は tmux の session に当たるので、
-      # tmux の choose-session と同じ prefix+s に置く。
-      workspace_picker = "prefix+s"
-      # prefix+s を空けるため、設定画面はシフト付きへ退避。
-      settings = "prefix+shift+s"
-
-      # tmux の choose-window に一番近いのは herdr の goto（横断ジャンプ）。
-      # workspace_picker が prefix+s へ移った分、空いた prefix+w に置く。
-      goto = "prefix+w"
+      # workspace 機能は使わないので、workspace_picker（tmux の choose-session
+      # 相当）と goto（横断ジャンプ）はどちらも割り当てない。空文字が「無効」。
+      # workspace が 1 つしかないなら選ぶものがない。
+      workspace_picker = ""
+      goto = ""
+      # 上を空けたので settings は herdr 既定の prefix+s のまま。退避は不要。
 
       # tmux の prefix , （rename-window）。
       rename_tab = "prefix+comma"
