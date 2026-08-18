@@ -68,6 +68,68 @@
     # '';
   };
 
+  # herdr のキーバインドを tmux 風に寄せる。
+  # ~/.config/herdr/ には socket・ログ・session.json といった実行時状態も
+  # 同居するので、ディレクトリごとではなく config.toml だけを張る。
+  xdg.configFile."herdr/config.toml".text = ''
+      # herdr のキーバインドを tmux の既定に寄せる。
+      # 差分の全体像は ~/memo/knowledges/herdr.md を参照。
+
+      # herdr 自身が初回起動時に書き込む値。ここが store の読み取り専用
+      # シンボリックリンクになるので、あらかじめ書いておかないと
+      # オンボーディング画面が毎回出る。
+      onboarding = false
+
+      [keys]
+      prefix = "ctrl+b"
+
+      # --- tmux に合わせて変更したもの ---
+
+      # 最重要。herdr の既定では prefix+q がデタッチで、tmux の癖で
+      # 「ペイン番号を表示」のつもりに押すとセッションから抜けてしまう。
+      detach = "prefix+d"
+
+      # herdr の workspace は tmux の session に当たるので、
+      # tmux の choose-session と同じ prefix+s に置く。
+      workspace_picker = "prefix+s"
+      # prefix+s を空けるため、設定画面はシフト付きへ退避。
+      settings = "prefix+shift+s"
+
+      # tmux の choose-window に一番近いのは herdr の goto（横断ジャンプ）。
+      # workspace_picker が prefix+s へ移った分、空いた prefix+w に置く。
+      goto = "prefix+w"
+
+      # tmux の prefix , （rename-window）。
+      rename_tab = "prefix+comma"
+
+      # tmux の prefix o （次のペイン）。既定の prefix+tab も
+      # cycle_pane_previous 側の prefix+shift+tab が残るので巡回はできる。
+      cycle_pane_next = "prefix+o"
+      # prefix+o を明け渡すため、通知先を開く操作をシフト付きへ退避。
+      open_notification_target = "prefix+shift+o"
+
+      # tmux の prefix ; （直前のペイン）。herdr の既定は未割り当て。
+      last_pane = "prefix+semicolon"
+
+      # --- 既定のままで tmux と一致しているもの（確認用に明示） ---
+      # new_tab      = "prefix+c"
+      # next_tab     = "prefix+n"
+      # previous_tab = "prefix+p"
+      # switch_tab   = "prefix+1..9"   # tmux と違い 0 は無い
+      # close_pane   = "prefix+x"
+      # zoom         = "prefix+z"
+      # コピーモードの prefix+[ は設定不可（固定）。貼り付けの prefix+] は herdr に無い。
+
+      # --- 揃えられなかったもの ---
+      # prefix+&（close_tab）と prefix+%／prefix+"（分割）は
+      # シフト付き記号で、herdr 自身が「端末依存」と警告しているため既定のまま。
+      #   close_tab        = "prefix+shift+x"
+      #   split_vertical   = "prefix+v"      （右に分割）
+      #   split_horizontal = "prefix+minus"  （下に分割）
+      # tmux の prefix+l（直前の window）に相当する操作は herdr に無い。
+      # prefix+h/j/k/l はペインのフォーカス移動として既定のまま使う。
+  '';
+
   # Home Manager can also manage your environment variables through
   # 'home.sessionVariables'. These will be explicitly sourced when using a
   # shell provided by Home Manager. If you don't want to manage your shell
